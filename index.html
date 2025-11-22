@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>QR para MP3 con descarga JPG</title>
+  <title>QR para MP3 con nombre personalizado</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <style>
@@ -14,21 +14,20 @@
       gap: 1rem;
       margin-top: 40px;
     }
-    #qrcode {
-      margin-top: 1rem;
-    }
     input, button {
       padding: 0.6rem;
       min-width: 280px;
-      cursor: pointer;
+      font-size: 1rem;
     }
   </style>
 </head>
 <body>
 
-  <h2>Generar QR para descargar MP3</h2>
+  <h2>Generar QR para MP3</h2>
 
-  <input type="text" id="urlInput" placeholder="Pegá acá el link directo al MP3" />
+  <input type="text" id="urlInput" placeholder="Pegá el link del MP3" />
+
+  <input type="text" id="nombreInput" placeholder="Nombre del archivo (sin .jpg)" />
 
   <button onclick="generarQR()">Generar QR</button>
 
@@ -40,14 +39,12 @@
     function generarQR() {
       const url = document.getElementById("urlInput").value.trim();
       if (!url) {
-        alert("Ingresá un enlace válido al MP3");
+        alert("Ingresá un enlace válido");
         return;
       }
 
-      // Limpiar QR anterior
       document.getElementById("qrcode").innerHTML = "";
 
-      // Crear QR nuevo
       new QRCode(document.getElementById("qrcode"), {
         text: url,
         width: 256,
@@ -56,21 +53,21 @@
     }
 
     function descargarQR() {
-      const qrCanvas = document.querySelector("#qrcode canvas");
-
-      if (!qrCanvas) {
-        alert("Primero generá el QR");
+      const canvas = document.querySelector("#qrcode canvas");
+      if (!canvas) {
+        alert("Generá el QR primero");
         return;
       }
 
-      // Convertir canvas a JPG
-      const imgData = qrCanvas.toDataURL("image/jpeg");
+      const nombre = document.getElementById("nombreInput").value.trim() || "qr_mp3";
 
-      // Crear link para descargar
+      // Convertir canvas a JPG
+      const imgData = canvas.toDataURL("image/jpeg");
+
+      // Crear link de descarga
       const link = document.createElement("a");
       link.href = imgData;
-      link.download = "qr_mp3.jpg";
-
+      link.download = nombre + ".jpg";
       link.click();
     }
   </script>
